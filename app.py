@@ -23,5 +23,19 @@ def register():
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('login'))
+    
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email=email, password=password).first()
+        if user:
+            session['user_id'] = user.id
+            return redirect(url_for('dashboard'))
+        else:
+            return render_template('login.html', message='Invalid email or password')
+    return render_template('login.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
