@@ -185,6 +185,8 @@ def api_upvotes():
     
     return jsonify(posts=posts_list)
 
+# Numerous features can be added to the API, these are the features I gave as an example, you can access more.
+# With your permission, I'm going to the land of flying dragons and a maniacal frontend. By the way, as much as I can write, I must say that I hate it. Please don't make me develop frontends. thanks
 
 @app.route('/logout')
 def logout():
