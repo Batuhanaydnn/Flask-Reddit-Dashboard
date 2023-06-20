@@ -167,6 +167,25 @@ def api_selected_posts():
         posts_list.append(post_dict)
     return jsonify(posts=posts_list)
 
+@app.route('/api/upvotes')
+def api_upvotes():
+    value = request.args.get('value')
+    if value:
+        posts = Post.query.filter(Post.upvotes > int(value)).all()
+    else:
+        posts = Post.query.all()
+
+    posts_list = []
+    for post in posts:
+        post_dict = {}
+        for key, value in post.__dict__.items():
+            if key != '_sa_instance_state':
+                post_dict[key] = value
+        posts_list.append(post_dict)
+    
+    return jsonify(posts=posts_list)
+
+
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
