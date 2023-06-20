@@ -68,63 +68,75 @@ def login():
             return render_template('login.html', message='Invalid email or password')
     return render_template('login.html')
 
-@app.route('/dashboard')
+@app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     if 'user_id' in session:
         user = User.query.filter_by(id=session['user_id']).first()
 
-        # Connect to Reddit API
-        reddit = praw.Reddit(client_id='JMqEtE1wdrD39jhY_ZwTQA',
-                             client_secret='dDqqLlBcblEFzj9EylLgckbPIHdz6w',
-                             user_agent='technicalqualifierwasveryeasy')
-        subreddit = reddit.subreddit('popular')
+        if request.method == 'POST':
+            
+            filter_text = request.form['filter_text']  
 
-        # Crawl new posts and add them to database
-        for post in subreddit.new(limit=100):
-            # Check if post already exists in database
-            if not db.session.query(Post).filter(Post.title == post.title).first():
-                # Create a dictionary to store post information
-                post_data = {
-                    'title': post.title,
-                    'content': post.selftext,
-                    'upvotes': post.score,
-                    'comment_count': post.num_comments,
-                    'video_link': None,
-                    'image_link': None
-                }
+            # Connect to Reddit API
+            reddit = praw.Reddit(client_id='JMqEtE1wdrD39jhY_ZwTQA',
+                                 client_secret='dDqqLlBcblEFzj9EylLgckbPIHdz6w',
+                                 user_agent='technicalqualifierwasveryeasy')
+            subreddit = reddit.subreddit('popular')
 
-                # Check if the post is a video post
-                if post.is_video:
-                    post_data['video_link'] = post.media['reddit_video']['fallback_url']
-                # Check if the post is an image post
-                elif post.url.endswith(('.jpg', '.jpeg', '.png', '.gif')):
-                    post_data['image_link'] = post.url
+            # Crawl new posts and add them to database
+            for post in subreddit.new(limit=100):
+                # Check if post already exists in database and matches the filter
+                if not db.session.query(Post).filter(Post.title == post.title, Post.title.contains(filter_text)).first():
+                    # Create a dictionary to store post information
+                    post_data = {
+                        'title': post.title,
+                        'content': post.selftext,
+                        'upvotes': post.score,
+                        'comment_count': post.num_comments,
+                        'video_link': None,
+                        'image_link': None
+                    }
 
-                # Create new post and add to database
-                new_post = Post(user=user, **post_data)
-                db.session.add(new_post)
-                db.session.commit()
+                    # Check if the post is a video post
+                    if post.is_video:
+                        post_data['video_link'] = post.media['reddit_video']['fallback_url']
+                    # Check if the post is an image post
+                    elif post.url.endswith(('.jpg', '.jpeg', '.png', '.gif')):
+                        post_data['image_link'] = post.url
 
-        # Get all posts from database and display on dashboard
-        posts = Post.query.all()
+                    # Create new post and add to database
+                    new_post = Post(user=user, **post_data)
+                    db.session.add(new_post)
+                    db.session.commit()
 
-        if request.headers.get('accept') == 'application/json':
-            # If the request accepts JSON, return the posts as JSON
-            json_posts = []
-            for post in posts:
-                json_post = {
-                    'title': post.title,
-                    'content': post.content,
-                    'upvotes': post.upvotes,
-                    'comment_count': post.comment_count,
-                    'video_link': post.video_link,
-                    'image_link': post.image_link
-                }
-                json_posts.append(json_post)
-            return jsonify(posts=json_posts)
+            # Get filtered posts from database
+            posts = Post.query.filter(Post.title.contains(filter_text)).all()
+
+            if request.headers.get('accept') == 'application/json':
+                # If the request accepts JSON, return the filtered posts as JSON
+                json_posts = []
+                for post in posts:
+                    json_post = {
+                        'title': post.title,
+                        'content': post.content,
+                        'upvotes': post.upvotes,
+                        'comment_count': post.comment_count,
+                        'video_link': post.video_link,
+                        'image_link': post.image_link
+                    }
+                    json_posts.append(json_post)
+                return jsonify(posts=json_posts)
+            else:
+                # Otherwise, render the dashboard template with filtered posts
+                return render_template('dashboard.html', user=user, posts=posts, filter_text=filter_text)
+
         else:
-            # Otherwise, render the dashboard template
+            # Get all posts from database
+            posts = Post.query.all()
+
+            # Render the dashboard template with all posts
             return render_template('dashboard.html', user=user, posts=posts)
+
     else:
         return redirect(url_for('login'))
 

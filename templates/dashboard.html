@@ -1,6 +1,11 @@
-
 {% block content %}
   <h1>Welcome, {{ user.name }}!</h1>
+
+  <form method="POST" action="/dashboard">
+    <input type="text" name="filter_text" placeholder="Filter text">
+    <button type="submit">Filter</button>
+  </form>
+
   <h2>Latest Posts</h2>
   <ul id="posts">
     {% for post in posts %}
