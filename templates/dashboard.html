@@ -1,9 +1,9 @@
 {% block content %}
   <h1>Welcome, {{ user.name }}!</h1>
 
-  <form method="POST" action="/dashboard">
-    <input type="text" name="filter_text" placeholder="Filter text">
-    <button type="submit">Filter</button>
+  <form>
+    <input type="text" id="filterText" placeholder="Filter text" oninput="updatePosts()">
+    <button type="button" onclick="updatePosts()">Filter</button>
   </form>
 
   <h2>Latest Posts</h2>
@@ -26,10 +26,16 @@
 
   <script>
     function updatePosts() {
-      fetch('/dashboard', { headers: { 'accept': 'application/json' } })
+      const filterText = document.getElementById('filterText').value.trim().toLowerCase();
+
+      fetch('/dashboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filter_text: filterText })
+      })
         .then(response => response.json())
         .then(data => {
-          const postsList = document.querySelector('#posts');
+          const postsList = document.getElementById('posts');
           postsList.innerHTML = '';
           data.posts.forEach(post => {
             const li = document.createElement('li');
@@ -45,7 +51,5 @@
           });
         });
     }
-
-    setInterval(updatePosts, 5000);
   </script>
 {% endblock %}

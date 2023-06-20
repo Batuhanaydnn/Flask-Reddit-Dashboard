@@ -84,7 +84,7 @@ def dashboard():
             subreddit = reddit.subreddit('popular')
 
             # Crawl new posts and add them to database
-            for post in subreddit.new(limit=100):
+            for post in subreddit.new(limit=10):
                 # Check if post already exists in database and matches the filter
                 if not db.session.query(Post).filter(Post.title == post.title, Post.title.contains(filter_text)).first():
                     # Create a dictionary to store post information
@@ -135,11 +135,11 @@ def dashboard():
             posts = Post.query.all()
 
             # Render the dashboard template with all posts
-            return render_template('dashboard.html', user=user, posts=posts)
+            return render_template('dashboard.html', user=user, posts=posts, filter_text='')
 
     else:
         return redirect(url_for('login'))
-
+    
 @app.route('/api/posts/')
 def api_posts():
     posts = Post.query.all()
