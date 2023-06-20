@@ -15,3 +15,7 @@ yarn-error.log
 /.vscode
 a.py
 /__pycache__
+/static/images
+/static/libs
+/static/fonts
+/instance/user.db

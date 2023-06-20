@@ -68,6 +68,8 @@ def login():
             return render_template('login.html', message='Invalid email or password')
     return render_template('login.html')
 
+
+
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     if 'user_id' in session:
@@ -187,6 +189,7 @@ def api_upvotes():
 
 # Numerous features can be added to the API, these are the features I gave as an example, you can access more.
 # With your permission, I'm going to the land of flying dragons and a maniacal frontend. By the way, as much as I can write, I must say that I hate it. Please don't make me develop frontends. thanks
+
 
 @app.route('/logout')
 def logout():
