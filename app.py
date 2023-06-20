@@ -140,9 +140,24 @@ def dashboard():
     else:
         return redirect(url_for('login'))
     
-@app.route('/api/posts/')
-def api_posts():
+@app.route('/api/allposts/')
+def api_all_posts():
     posts = Post.query.all()
+    posts_list = []
+    for post in posts:
+        post_dict = {}
+        for key, value in post.__dict__.items():
+            if key != '_sa_instance_state':
+                post_dict[key] = value
+        posts_list.append(post_dict)
+    return jsonify(posts=posts_list)
+
+@app.route('/api/selectedposts/')
+def api_selected_posts():
+    name = request.args.get('name')
+    value = request.args.get('value')
+
+    posts = Post.query.filter(getattr(Post, name).ilike(f'%{value}%')).all()
     posts_list = []
     for post in posts:
         post_dict = {}
