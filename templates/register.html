@@ -1,31 +1,235 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Register</title>
-</head>
-<body>
-	<h1>Register</h1>
-{% with messages = get_flashed_messages(with_categories=true) %}
-  	{% if messages %}
-    	{% for category, message in messages %}
-      <div class="alert alert-{{ category }}">
-        	{{ message }}
-      </div>
-    	{% endfor %}
-  {% endif %}
-{% endwith %}
-	<form method="POST">
-		<label>Name</label>
-		<input type="text" name="name" required>
-		<label>Email</label>
-		<input type="email" name="email" required>
-		<label>Password</label>
-		<input type="password" name="password" required>
-		<label>Password Again</label>
-		<input type="password" name="password2" required>
+<!doctype html>
+<html lang="en">
 
-		<button type="submit">Register</button>
-	</form>
-	<a href="{{ url_for('login') }}">Already have an account? Login here</a>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Reddit Api Technical Interview - Register</title>
+
+    <!-- CSS FILES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;400;700&display=swap" rel="stylesheet">
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/static/css/bootstrap-icons.css" rel="stylesheet">
+
+    <link href="/static/css/templatemo-festava-live.css" rel="stylesheet">
+    <!--
+
+TemplateMo 583 Festava Live
+
+https://templatemo.com/tm-583-festava-live
+
+-->
+
+</head>
+
+<body>
+
+    <main>
+
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    Reddit Api
+                </a>
+
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav align-items-lg-center ms-auto me-lg-5">
+                        <li class="nav-item">
+                            <a class="nav-link click-scroll" href="#" hidden></a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link click-scroll" href="#" hidden></a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link click-scroll" href="#" hidden></a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link click-scroll" href="#" hidden></a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link click-scroll" href="#" hidden></a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link click-scroll" href="#" hidden></a>
+                        </li>
+                    </ul>
+
+                    <a href="{{ url_for('login') }}" class="btn custom-btn d-lg-block d-none">Login</a>
+                </div>
+            </div>
+        </nav>
+
+
+        <section class="ticket-section section-padding">
+            <div class="section-overlay"></div>
+
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-6 col-10 mx-auto">
+                        <form class="custom-form ticket-form mb-5 mb-lg-0"  method="post" role="form">
+                            <h2 class="text-center mb-4">Register to use Reddit API</h2>
+                            <br><br>
+
+                            <div class="ticket-form-body">
+
+                                <input type="email" class="form-control" name="email"
+                                    placeholder="Email" required="">
+                                    <input type="text" class="form-control" name="name"
+                                    placeholder="Name" required="">
+
+                                <input type="password" class="form-control" name="password"
+                                    placeholder="Passowrd" required="">
+                                    <div class="col-lg-6 col-md-6 col-12">
+                                            <a href="{{ url_for('login') }}">Do you have an account? Login</a>
+                                        </div>
+                                    </div>
+                                    <br><br><br>
+
+                                <div class="col-lg-4 col-md-10 col-8 mx-auto">
+                                    <button type="submit" class="form-control">Register</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer-top">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-6 col-12">
+                        <h2 class="text-white mb-lg-0">Reddit Post Api</h2>
+                    </div>
+
+                    <div class="col-lg-6 col-12 d-flex justify-content-lg-end align-items-center">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-6 col-12 mb-4 pb-2">
+                    <h5 class="site-footer-title mb-3">Links</h5>
+
+                    <ul class="site-footer-links">
+                        <li class="site-footer-link-item">
+                            <a href="#" class="site-footer-link">Home</a>
+                        </li>
+
+                        <li class="site-footer-link-item">
+                            <a href="#" class="site-footer-link">About Project</a>
+                        </li>
+
+                        <li class="site-footer-link-item">
+                            <a href="#" class="site-footer-link">Meet Me</a>
+                        </li>
+
+                        <li class="site-footer-link-item">
+                            <a href="#" class="site-footer-link">Pricing</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
+                    <h5 class="site-footer-title mb-3">Have a question?</h5>
+
+                    <p class="text-white d-flex mb-1">
+                        <a href="mailto:info@batuhanaydn.com" class="site-footer-link">
+                            Mail Me
+                        </a>
+                    </p>
+
+                    <p class="text-white d-flex">
+                        <a href="https://linkedin.com/in/batuhan-aydinn" class="site-footer-link">
+                            Linkedlin Contact
+                        </a>
+                    </p>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-11 mb-4 mb-lg-0 mb-md-0">
+                    <h5 class="site-footer-title mb-3">Location</h5>
+
+                    <p class="text-white d-flex mt-3 mb-2">
+                        300 Delaware Ave. Ste 210 #328. Wilmington, Delaware 19801, US</p>
+
+                    <a class="link-fx-1 color-contrast-higher mt-3" href="#">
+                        <span>Our Maps</span>
+                        <svg class="icon" viewBox="0 0 32 32" aria-hidden="true">
+                            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="16" cy="16" r="15.5"></circle>
+                                <line x1="10" y1="18" x2="16" y2="12"></line>
+                                <line x1="16" y1="12" x2="22" y2="18"></line>
+                            </g>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="site-footer-bottom">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-3 col-12 mt-5">
+                        <p class="copyright-text">Copyright © 2036 Festava Live Company</p>
+                        <p class="copyright-text">Distributed by: <a href="https://themewagon.com">ThemeWagon</a></p>
+                    </div>
+
+                    <div class="col-lg-8 col-12 mt-lg-5">
+                        <ul class="site-footer-links">
+                            <li class="site-footer-link-item">
+                                <a href="https://github.com/Batuhanaydnn/Reddit-Api-/blob/master/LICENSE" class="site-footer-link">LICENSE</a>
+                            </li>
+
+                            <li class="site-footer-link-item">
+                                <a href="https://github.com/Batuhanaydnn/Reddit-Api-/issues" class="site-footer-link">Your Feedback</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!--
+
+T e m p l a t e M o
+
+-->
+    <!-- JAVASCRIPT FILES -->
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/jquery.sticky.js"></script>
+    <script src="/static/js/custom.js"></script>
+
 </body>
+
 </html>
