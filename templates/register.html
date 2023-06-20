@@ -5,6 +5,15 @@
 </head>
 <body>
 	<h1>Register</h1>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  	{% if messages %}
+    	{% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        	{{ message }}
+      </div>
+    	{% endfor %}
+  {% endif %}
+{% endwith %}
 	<form method="POST">
 		<label>Name</label>
 		<input type="text" name="name" required>
@@ -12,6 +21,9 @@
 		<input type="email" name="email" required>
 		<label>Password</label>
 		<input type="password" name="password" required>
+		<label>Password Again</label>
+		<input type="password" name="password2" required>
+
 		<button type="submit">Register</button>
 	</form>
 	<a href="{{ url_for('login') }}">Already have an account? Login here</a>
