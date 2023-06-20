@@ -4,7 +4,18 @@
   <h2>Latest Posts</h2>
   <ul id="posts">
     {% for post in posts %}
-      <li>{{ post.title }}</li>
+      <li>
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.content }}</p>
+        <p>Upvotes: {{ post.upvotes }}</p>
+        <p>Comment Count: {{ post.comment_count }}</p>
+        {% if post.video_link %}
+          <p>Video Link: <a href="{{ post.video_link }}">{{ post.video_link }}</a></p>
+        {% endif %}
+        {% if post.image_link %}
+          <p>Image Link: <a href="{{ post.image_link }}">{{ post.image_link }}</a></p>
+        {% endif %}
+      </li>
     {% endfor %}
   </ul>
 
@@ -17,7 +28,14 @@
           postsList.innerHTML = '';
           data.posts.forEach(post => {
             const li = document.createElement('li');
-            li.innerText = post.title;
+            li.innerHTML = `
+              <h3>${post.title}</h3>
+              <p>${post.content}</p>
+              <p>Upvotes: ${post.upvotes}</p>
+              <p>Comment Count: ${post.comment_count}</p>
+              ${post.video_link ? `<p>Video Link: <a href="${post.video_link}">${post.video_link}</a></p>` : ''}
+              ${post.image_link ? `<p>Image Link: <a href="${post.image_link}">${post.image_link}</a></p>` : ''}
+            `;
             postsList.appendChild(li);
           });
         });
