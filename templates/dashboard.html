@@ -1,0 +1,28 @@
+
+{% block content %}
+  <h1>Welcome, {{ user.name }}!</h1>
+  <h2>Latest Posts</h2>
+  <ul id="posts">
+    {% for post in posts %}
+      <li>{{ post.title }}</li>
+    {% endfor %}
+  </ul>
+
+  <script>
+    function updatePosts() {
+      fetch('/dashboard', { headers: { 'accept': 'application/json' } })
+        .then(response => response.json())
+        .then(data => {
+          const postsList = document.querySelector('#posts');
+          postsList.innerHTML = '';
+          data.posts.forEach(post => {
+            const li = document.createElement('li');
+            li.innerText = post.title;
+            postsList.appendChild(li);
+          });
+        });
+    }
+
+    setInterval(updatePosts, 5000);
+  </script>
+{% endblock %}
