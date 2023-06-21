@@ -4,7 +4,6 @@ from datetime import datetime
 import praw
 
 app = Flask(__name__)
-# the current application, which allows the application to access the configuration, database, and other resources.
 app.app_context().push()
 app.secret_key = 'supersecretkey'
 
@@ -71,78 +70,51 @@ def login():
             return render_template('login.html', message='Invalid email or password')
     return render_template('login.html')
 
-
 # Define Dashboard
-@app.route('/dashboard', methods=['GET', 'POST'])
+@app.route('/dashboard')
 def dashboard():
-    # It is checked whether there is a session in the system by reading the user id over the session.
     if 'user_id' in session:
         user = User.query.filter_by(id=session['user_id']).first()
 
-        if request.method == 'POST':
-            
-            filter_text = request.form['filter_text']  
+        # Connect to Reddit API
+        reddit = praw.Reddit(client_id='JMqEtE1wdrD39jhY_ZwTQA',
+                             client_secret='dDqqLlBcblEFzj9EylLgckbPIHdz6w',
+                             user_agent='technicalqualifierwasveryeasy')
+        subreddit = reddit.subreddit('popular')
+        # Crawl new posts and add them to database
+        for post in subreddit.new(limit=100):
+            # Check if post already exists in database
+            if not db.session.query(Post).filter(Post.title == post.title).first():
+                # Create new post and add to database
+                new_post = Post(title=post.title, content=post.selftext, upvotes=post.score, comment_count=post.num_comments, video_link=None, image_link=None, user=user)
+                # Check if the post is a video post
+                if post.is_video:
+                    new_post.video_link = post.media['reddit_video']['fallback_url']
+                # Check if the post is an image post
+                elif post.url.endswith(('.jpg', '.jpeg', '.png', '.gif')):
+                    new_post.image_link = post.url
+                db.session.add(new_post)
+                db.session.commit()
 
-            # Connect to Reddit API
-            reddit = praw.Reddit(client_id='JMqEtE1wdrD39jhY_ZwTQA',
-                                 client_secret='dDqqLlBcblEFzj9EylLgckbPIHdz6w',
-                                 user_agent='technicalqualifierwasveryeasy')
-            subreddit = reddit.subreddit('netsec')
-
-            # Crawl new posts and add them to database
-            for post in subreddit.new(limit=10):
-                # Check if post already exists in database and matches the filter
-                if not db.session.query(Post).filter(Post.title == post.title, Post.title.contains(filter_text)).first():
-                    # Create a dictionary to store post information
-                    post_data = {
-                        'title': post.title,
-                        'content': post.selftext,
-                        'upvotes': post.score,
-                        'comment_count': post.num_comments,
-                        'video_link': None,
-                        'image_link': None
-                    }
-
-                    # Check if the post is a video post
-                    if post.is_video:
-                        post_data['video_link'] = post.media['reddit_video']['fallback_url']
-                    # Check if the post is an image post
-                    elif post.url.endswith(('.jpg', '.jpeg', '.png', '.gif')):
-                        post_data['image_link'] = post.url
-
-                    # Create new post and add to database
-                    new_post = Post(user=user, **post_data)
-                    db.session.add(new_post)
-                    db.session.commit()
-
-            # Get filtered posts from database
-            posts = Post.query.filter(Post.title.contains(filter_text)).all()
-
-            if request.headers.get('accept') == 'application/json':
-                # If the request accepts JSON, return the filtered posts as JSON
-                json_posts = []
-                for post in posts:
-                    json_post = {
-                        'title': post.title,
-                        'content': post.content,
-                        'upvotes': post.upvotes,
-                        'comment_count': post.comment_count,
-                        'video_link': post.video_link,
-                        'image_link': post.image_link
-                    }
-                    json_posts.append(json_post)
-                return jsonify(posts=json_posts)
-            else:
-                # Otherwise, render the dashboard template with filtered posts
-                return render_template('dashboard.html', user=user, posts=posts, filter_text=filter_text)
-
+        # Get all posts from database and display on dashboard
+        posts = Post.query.all()
+        if request.headers.get('accept') == 'application/json':
+            # If the request accepts JSON, return the posts as JSON
+            json_posts = []
+            for post in posts:
+                json_post = {
+                    'title': post.title,
+                    'content': post.content,
+                    'upvotes': post.upvotes,
+                    'comment_count': post.comment_count,
+                    'video_link': post.video_link,
+                    'image_link': post.image_link
+                }
+                json_posts.append(json_post)
+            return jsonify(posts=json_posts)
         else:
-            # Get all posts from database
-            posts = Post.query.all()
-
-            # Render the dashboard template with all posts
-            return render_template('dashboard.html', user=user, posts=posts, filter_text='')
-
+            # Otherwise, render the dashboard template
+            return render_template('dashboard.html', user=user, posts=posts)
     else:
         return redirect(url_for('login'))
 
@@ -161,7 +133,6 @@ def api_all_posts():
 
 # Define selected post api
 # Example usage: /api/selectedposts?name=title&value=brandefense
-
 @app.route('/api/selectedposts/')
 def api_selected_posts():
     name = request.args.get('name')
@@ -194,11 +165,7 @@ def api_upvotes():
             if key != '_sa_instance_state':
                 post_dict[key] = value
         posts_list.append(post_dict)
-    
     return jsonify(posts=posts_list)
-
-# Numerous features can be added to the API, these are the features I gave as an example, you can access more.
-# With your permission, I'm going to the land of flying dragons and a maniacal frontend. By the way, as much as I can write, I must say that I hate it. Please don't make me develop frontends. thanks
 
 # Define Logout
 @app.route('/logout')

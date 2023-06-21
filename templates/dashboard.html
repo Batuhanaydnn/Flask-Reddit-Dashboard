@@ -223,4 +223,22 @@
     <script src="/static/js/demo.min.js?1684106062" defer></script>
   </body>
 </html>
+
+<script>
+  function updatePosts() {
+    fetch('/dashboard', { headers: { 'accept': 'application/json' } })
+      .then(response => response.json())
+      .then(data => {
+        const postsList = document.querySelector('#posts');
+        postsList.innerHTML = '';
+        data.posts.forEach(post => {
+          const li = document.createElement('li');
+          li.innerText = post.title;
+          postsList.appendChild(li);
+        });
+      });
+  }
+
+  setInterval(updatePosts, 5000);
+</script>
 {% endblock %}
