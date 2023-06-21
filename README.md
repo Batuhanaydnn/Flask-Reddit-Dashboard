@@ -1,6 +1,6 @@
 # Flask Reddit Dashboard
 
-<div style="padding:75% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/838271564?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="brandefense-dragon-video"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+<iframe src="https://player.vimeo.com/video/838271564?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="1920" height="1080" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="brandefense-dragon-video"></iframe>
 
 Flask Reddit Dashboard is a web application that provides a user-friendly interface to display and filter Reddit posts. It allows users to register, login, and view posts from the subreddit 'netsec'. The application utilizes the Flask framework, SQLAlchemy for database management, and the Python Reddit API Wrapper (praw) to interact with the Reddit API.
 
