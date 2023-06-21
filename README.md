@@ -3,18 +3,7 @@
 
   
 
-<!DOCTYPE  html>
-
-<html  lang="en">
-
-  
-
-<body>
-
-<iframe src="https://player.vimeo.com/video/838271564?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="640" height="320" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="brandefense-dragon-video"></iframe>
-</body>
-
-</html>
+https://github.com/Batuhanaydnn/Reddit-Api-/assets/128238475/88402c8b-a392-4068-abcd-bb0cf74451bd
 
   
 
@@ -365,4 +354,7 @@ Muhammed Batuhan Aydın
   
 
 Note: I guess you'll get me on internship now and I'm too lazy to use the blueprint structure, so I'm sorry about that, I'll update it after a 3-day project.
+<<<<<<< HEAD
 Last Note: Bak bu türkçe abi canlıya almaya çok üşendim gerekliyse yaparım. Ben kaçtım bye
+=======
+>>>>>>> 2094c9a82df18b2a3f1aba96d21613095b10e403
