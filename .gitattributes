@@ -1,2 +1,2 @@
 *.css linguist-vendored
-*.js linguist-detectable=false
+*.js linguist-vendored
