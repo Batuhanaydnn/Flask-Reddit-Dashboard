@@ -4,6 +4,7 @@ from datetime import datetime
 import praw
 
 app = Flask(__name__)
+# the current application, which allows the application to access the configuration, database, and other resources.
 app.app_context().push()
 app.secret_key = 'supersecretkey'
 
@@ -38,11 +39,12 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post %r>' % self.title
 
-# Define routes for login and registration
+# Define Home Page
 @app.route('/')
 def home():
     return render_template('home.html')
 
+# Define Register Page
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -55,6 +57,7 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html')
 
+# Define Login Page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -69,9 +72,10 @@ def login():
     return render_template('login.html')
 
 
-
+# Define Dashboard
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
+    # It is checked whether there is a session in the system by reading the user id over the session.
     if 'user_id' in session:
         user = User.query.filter_by(id=session['user_id']).first()
 
@@ -83,7 +87,7 @@ def dashboard():
             reddit = praw.Reddit(client_id='JMqEtE1wdrD39jhY_ZwTQA',
                                  client_secret='dDqqLlBcblEFzj9EylLgckbPIHdz6w',
                                  user_agent='technicalqualifierwasveryeasy')
-            subreddit = reddit.subreddit('popular')
+            subreddit = reddit.subreddit('netsec')
 
             # Crawl new posts and add them to database
             for post in subreddit.new(limit=10):
@@ -141,7 +145,8 @@ def dashboard():
 
     else:
         return redirect(url_for('login'))
-    
+
+# Define all post api
 @app.route('/api/allposts/')
 def api_all_posts():
     posts = Post.query.all()
@@ -153,6 +158,9 @@ def api_all_posts():
                 post_dict[key] = value
         posts_list.append(post_dict)
     return jsonify(posts=posts_list)
+
+# Define selected post api
+# Example usage: /api/selectedposts?name=title&value=brandefense
 
 @app.route('/api/selectedposts/')
 def api_selected_posts():
@@ -169,6 +177,8 @@ def api_selected_posts():
         posts_list.append(post_dict)
     return jsonify(posts=posts_list)
 
+# Define upvotes filter
+# Example usage: /api/upvotes?value=100
 @app.route('/api/upvotes')
 def api_upvotes():
     value = request.args.get('value')
@@ -190,7 +200,7 @@ def api_upvotes():
 # Numerous features can be added to the API, these are the features I gave as an example, you can access more.
 # With your permission, I'm going to the land of flying dragons and a maniacal frontend. By the way, as much as I can write, I must say that I hate it. Please don't make me develop frontends. thanks
 
-
+# Define Logout
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
