@@ -365,3 +365,4 @@ Muhammed Batuhan Aydın
   
 
 Note: I guess you'll get me on internship now and I'm too lazy to use the blueprint structure, so I'm sorry about that, I'll update it after a 3-day project.
+Last Note: Bak bu türkçe abi canlıya almaya çok üşendim gerekliyse yaparım. Ben kaçtım bye
