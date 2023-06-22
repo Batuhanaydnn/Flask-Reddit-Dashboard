@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, send_file
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import praw
 import time
-
+import pdfkit
 app = Flask(__name__)
 app.app_context().push()
 app.secret_key = 'supersecretkey'
@@ -123,6 +123,27 @@ def dashboard():
             return render_template('dashboard.html', user=user, posts=posts)
     else:
         return redirect(url_for('login'))
+
+
+@app.route('/download-pdf')
+def download_pdf():
+    if 'user_id' in session:
+        user = User.query.filter_by(id=session['user_id']).first()
+        posts = Post.query.all()
+        html_content = render_template('dashboard.html', user=user, posts=posts)
+
+        options = {
+            'enable-local-file-access': None,
+            'quiet': '',
+            'disable-smart-shrinking': '',
+            'no-stop-slow-scripts': ''
+        }
+
+        pdfkit.from_string(html_content, 'output.pdf', options=options)
+        return send_file('output.pdf', as_attachment=True)
+    else:
+        session.clear()
+        return redirect('/')
 
 # Define Api Login
 @app.route('/api/login', methods=['GET', 'POST'])
