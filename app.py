@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, j
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import praw
+import time
 
 app = Flask(__name__)
 app.app_context().push()
@@ -118,54 +119,93 @@ def dashboard():
     else:
         return redirect(url_for('login'))
 
+# Define Api Login
+@app.route('/api/login', methods=['GET', 'POST'])
+def api_login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email=email, password=password).first()
+        if user:
+            session['user_id'] = user.id
+            print(jsonify({'message': 'Login Successful, you are redirected in 5 seconds'}))
+            time.sleep(5)
+            return redirect('/api/allposts')
+        else:
+            return jsonify({'message': 'Your credentials are incorrect. Please try again'})
+# Define Api Register
+@app.route('/api/register', methods=['GET', 'POST'])
+def api_register():
+    if request.method == 'POST':
+        email = request.form['email']
+        name = request.form['name']
+        password = request.form['password']
+        user = User(name=name, email=email, password=password)
+        if user:
+            session['user_id'] = user.id
+            print(jsonify({'message': 'Login Successful, you are redirected in 5 seconds'}))
+            time.sleep(5)
+            return redirect('/api/allposts')
+        else:
+            return jsonify({'message': 'Your credentials are incorrect. Please try again'})
+
 # Define all post api
 @app.route('/api/allposts/')
 def api_all_posts():
-    posts = Post.query.all()
-    posts_list = []
-    for post in posts:
-        post_dict = {}
-        for key, value in post.__dict__.items():
-            if key != '_sa_instance_state':
-                post_dict[key] = value
-        posts_list.append(post_dict)
-    return jsonify(posts=posts_list)
-
+    if 'user_id' in session:
+        posts = Post.query.all()
+        posts_list = []
+        for post in posts:
+            post_dict = {}
+            for key, value in post.__dict__.items():
+                if key != '_sa_instance_state':
+                    post_dict[key] = value
+            posts_list.append(post_dict)
+        return jsonify(posts=posts_list)
+    else:
+        return jsonify({'message': 'Try again after logging in'})
 # Define selected post api
 # Example usage: /api/selectedposts?name=title&value=brandefense
 @app.route('/api/selectedposts/')
 def api_selected_posts():
-    name = request.args.get('name')
-    value = request.args.get('value')
+    if 'user_id' in session:
+        name = request.args.get('name')
+        value = request.args.get('value')
 
-    posts = Post.query.filter(getattr(Post, name).ilike(f'%{value}%')).all()
-    posts_list = []
-    for post in posts:
-        post_dict = {}
-        for key, value in post.__dict__.items():
-            if key != '_sa_instance_state':
-                post_dict[key] = value
-        posts_list.append(post_dict)
-    return jsonify(posts=posts_list)
+        posts = Post.query.filter(getattr(Post, name).ilike(f'%{value}%')).all()
+        posts_list = []
+        for post in posts:
+            post_dict = {}
+            for key, value in post.__dict__.items():
+                if key != '_sa_instance_state':
+                    post_dict[key] = value
+            posts_list.append(post_dict)
+        return jsonify(posts=posts_list)
+    else:
+        return jsonify({'message': 'Try again after logging in'})
 
 # Define upvotes filter
 # Example usage: /api/upvotes?value=100
 @app.route('/api/upvotes')
 def api_upvotes():
-    value = request.args.get('value')
-    if value:
-        posts = Post.query.filter(Post.upvotes > int(value)).all()
-    else:
-        posts = Post.query.all()
+    if 'user_id' in session:
+        value = request.args.get('value')
+        if value:
+            posts = Post.query.filter(Post.upvotes > int(value)).all()
+        else:
+            posts = Post.query.all()
 
-    posts_list = []
-    for post in posts:
-        post_dict = {}
-        for key, value in post.__dict__.items():
-            if key != '_sa_instance_state':
-                post_dict[key] = value
-        posts_list.append(post_dict)
-    return jsonify(posts=posts_list)
+        posts_list = []
+        for post in posts:
+            post_dict = {}
+            for key, value in post.__dict__.items():
+                if key != '_sa_instance_state':
+                    post_dict[key] = value
+            posts_list.append(post_dict)
+        return jsonify(posts=posts_list)
+    
+    else:
+        return jsonify({'message': 'Try again after logging in'})
 
 # Define Logout
 @app.route('/logout')
