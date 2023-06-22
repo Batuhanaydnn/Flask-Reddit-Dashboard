@@ -51,11 +51,16 @@ def register():
         name = request.form['name']
         email = request.form['email']
         password = request.form['password']
-        user = User(name=name, email=email, password=password)
-        db.session.add(user)
-        db.session.commit()
-        return redirect(url_for('login'))
+        password2 = request.form['password2']
+        if password == password2:
+            user = User(name=name, email=email, password=password)
+            db.session.add(user)
+            db.session.commit()
+            return redirect(url_for('login'))
+        else:
+            return render_template('register.html')
     return render_template('register.html')
+
 
 # Define Login Page
 @app.route('/login', methods=['GET', 'POST'])
