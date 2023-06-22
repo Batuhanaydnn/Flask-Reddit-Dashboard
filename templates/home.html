@@ -22,6 +22,10 @@
     <link href="/static/css/bootstrap-icons.css" rel="stylesheet">
 
     <link href="/static/css/templatemo-festava-live.css" rel="stylesheet">
+    
+    <link href="/static/style.css" rel="stylesheet">
+
+
 
     <!--
 
@@ -48,6 +52,9 @@ https://templatemo.com/tm-583-festava-live
                 </a>
 
                 <a href="{{ url_for('login') }}" class="btn custom-btn d-lg-none ms-auto me-4">Login</a>
+                <span class="button-spacing"></span>
+                <a href="{{ url_for('register') }}" class="btn custom-btn d-lg-none ms-auto me-4">register</a>
+
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,6 +81,9 @@ https://templatemo.com/tm-583-festava-live
                     </ul>
 
                     <a href="{{ url_for('login') }}" class="btn custom-btn d-lg-block d-none">Login</a>
+                    <span class="button-spacing"></span>
+                    <a href="{{ url_for('register') }}" class="btn custom-btn d-lg-block d-none">Register</a>
+
                 </div>
             </div>
         </nav>
