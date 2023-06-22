@@ -140,6 +140,12 @@ The Flask Reddit Dashboard provides the following API endpoints:
 
 - `GET /api/upvotes/?value=<value>`: Retrieves posts with upvotes greater than the specified value.
 
+- `GET /api/upvotes/?value=<value>`: Retrieves posts with upvotes greater than the specified value.
+
+- `GET /api/login`: Login via API.
+
+- `GET /api/register`: Register via API.
+
   
 
 For detailed information on using these API endpoints, please refer to the API documentation.
@@ -184,6 +190,8 @@ The Flask Reddit Dashboard project acknowledges the usage of the following third
 
 - Reddit API: [https://www.reddit.com/dev/api/](https://www.reddit.com/dev/api/)
 
+
+- wkhtmltopdf: [https://wkhtmltopdf.org/downloads.html](https://wkhtmltopdf.org/downloads.html)
   
   
 
@@ -301,6 +309,11 @@ The Flask Reddit Dashboard project acknowledges the usage of the following third
 
 13. The `if __name__ == '__main__':` block creates the database tables using `db.create_all()` and starts the Flask application.
 
+14. With the download-post endpoint, it allows you to download all the content on the dashboard in pdf format. WARNING: If you have too much content, you may encounter error messages because I haven't written pagination yet.
+
+15. The /api/register function you can register via api with
+
+16. The /api/login function you can login via api with 
 ```
 
   
