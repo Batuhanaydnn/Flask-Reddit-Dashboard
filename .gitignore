@@ -18,3 +18,4 @@ a.py
 /static/images
 /static/libs
 /static/fonts
+gunicorn_config.py
