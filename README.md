@@ -3,7 +3,7 @@
 
   
 
-https://github.com/Batuhanaydnn/Reddit-Api-/assets/128238475/88402c8b-a392-4068-abcd-bb0cf74451bd
+
 
   
 
